@@ -14,7 +14,7 @@
     
     float x = self.chasingGroup.centerOfTheGroup.x - boid.position.x;
     float y = self.chasingGroup.centerOfTheGroup.y - boid.position.y;
-    float speed = 0.0225;
+    float speed = 0.0125;
     
     x = x * (- speed);
     y = y * (- speed);

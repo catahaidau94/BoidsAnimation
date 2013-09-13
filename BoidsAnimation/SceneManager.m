@@ -25,47 +25,69 @@
     resultSceneManager.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 / fps target:resultSceneManager selector:@selector(update:) userInfo:nil repeats:YES];
     
     resultSceneManager.boidsGroups = [NSMutableArray new];
+        
+    NSArray *colors = @[[UIColor redColor], [UIColor blueColor], [UIColor greenColor], [UIColor orangeColor], [UIColor purpleColor], [UIColor yellowColor], [UIColor grayColor], [UIColor brownColor]];
     
-    BoidGroup *chasingBoidGroup = [resultSceneManager createBoidGroup:[UIColor redColor]];
-    BoidGroup *chasedBoidGroup = [resultSceneManager createBoidGroup:[UIColor greenColor]];
-    BoidGroup *chasedBoidGroup2 = [resultSceneManager createBoidGroup:[UIColor blueColor]];
+//    BoidGroup *chasingBoidGroup = [resultSceneManager createBoidGroup:[UIColor redColor]];
+//    BoidGroup *chasedBoidGroup = [resultSceneManager createBoidGroup:[UIColor greenColor]];
+//    BoidGroup *chasedBoidGroup2 = [resultSceneManager createBoidGroup:[UIColor blueColor]];
     
     SpeedLimitRule *speedLimitRule = [SpeedLimitRule new];
-    [chasingBoidGroup.ruls addObject:speedLimitRule];
-    [chasedBoidGroup.ruls addObject:speedLimitRule];
-    [chasedBoidGroup2.ruls addObject:speedLimitRule];
     
-    speedLimitRule.speedLimit = 120;
-    
-    
-    ChaseRule *chaseRule = [ChaseRule new];
-    [chasingBoidGroup.ruls addObject:chaseRule];
-    chaseRule.chasedGroup = chasedBoidGroup;
-    
-    EscapeRule *escapeRule = [EscapeRule new];
-    [chasedBoidGroup.ruls addObject:escapeRule];
-    [chasedBoidGroup2.ruls addObject:escapeRule];
-
-    
-    [resultSceneManager.boidsGroups addObject:chasingBoidGroup];
-    [resultSceneManager.boidsGroups addObject:chasedBoidGroup];
-    [resultSceneManager.boidsGroups addObject:chasedBoidGroup2];
-//    [resultSceneManager.boidsGroups addObject:[resultSceneManager createBoidGroup:[UIColor greenColor]]];
-//    [resultSceneManager.boidsGroups addObject:[resultSceneManager createBoidGroup:[UIColor purpleColor]]];
-//    [resultSceneManager.boidsGroups addObject:[resultSceneManager createBoidGroup:[UIColor orangeColor]]];
-    
-//    resultSceneManager.boidsGroup = [BoidGroup new];
+//    [chasingBoidGroup.ruls addObject:speedLimitRule];
+//    [chasedBoidGroup.ruls addObject:speedLimitRule];
+//    speedLimitRule.speedLimit = 80;
 //    
-//    [resultSceneManager.boidsGroup createBoids];
-//    resultSceneManager.boidsGroup.color = [UIColor blueColor];
-//    for (Boid *boid in resultSceneManager.boidsGroup.boids) {
-//        [view addSubview:boid];
-//    }
+//    speedLimitRule = [SpeedLimitRule new];
+//    [chasedBoidGroup2.ruls addObject:speedLimitRule];
+//    speedLimitRule.speedLimit = 120;
     
+//    [resultSceneManager group1Chasing:chasingBoidGroup group2:chasedBoidGroup];
+//    [resultSceneManager group1Chasing:chasedBoidGroup group2:chasedBoidGroup2];
+//    [resultSceneManager group1Chasing:chasedBoidGroup2 group2:chasingBoidGroup];
+//
 
+//    [resultSceneManager.boidsGroups addObject:chasingBoidGroup];
+//    [resultSceneManager.boidsGroups addObject:chasedBoidGroup];
+//    [resultSceneManager.boidsGroups addObject:chasedBoidGroup2];
+    
+    int numberOfBoidsGroups = 8;
+    
+    for (int i = 1; i <= numberOfBoidsGroups; ++ i){
+        BoidGroup *newBoidGroup = [resultSceneManager createBoidGroup:colors[i - 1]];
+        
+        speedLimitRule = [SpeedLimitRule new];
+        [newBoidGroup.ruls addObject:speedLimitRule];
+        speedLimitRule.speedLimit = arc4random() % 80 + 80;
+        
+        [resultSceneManager.boidsGroups addObject:newBoidGroup];
+        if (i > 1){
+            [resultSceneManager group1Chasing:resultSceneManager.boidsGroups[i - 2] group2:newBoidGroup];
+        }
+        if (i == numberOfBoidsGroups){
+            [resultSceneManager group1Chasing:newBoidGroup group2:resultSceneManager.boidsGroups[0]];
+        }
+    }    
     
     return resultSceneManager;
 }
+
+- (float)getFloat{
+    float randomNumber = (arc4random() % 250) / 332.0 + 0.25;
+    return randomNumber;
+}
+
+
+- (void)group1Chasing:(BoidGroup *)boidGroup1 group2:(BoidGroup *)boidGroup2{
+    ChaseRule *chaseRule = [ChaseRule new];
+    [boidGroup1.ruls addObject:chaseRule];
+    chaseRule.chasedGroup = boidGroup2;
+    
+    EscapeRule *escapeRule = [EscapeRule new];
+    [boidGroup2.ruls addObject:escapeRule];
+    escapeRule.chasingGroup = boidGroup1;
+}
+
 
 - (BoidGroup *)createBoidGroup:(UIColor *)color{
     

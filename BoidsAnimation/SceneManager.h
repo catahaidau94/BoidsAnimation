@@ -18,5 +18,7 @@
 + (SceneManager *)createSceneManager:(UIView *)view;
 - (void)update:(NSTimer *)timer;
 - (BoidGroup *)createBoidGroup:(UIColor *)color;
+- (void)group1Chasing:(BoidGroup *)boidGroup1 group2:(BoidGroup *)boidGroup2;
+- (float)getFloat;
 
 @end

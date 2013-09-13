@@ -33,7 +33,7 @@
   // [self.ruls addObject:[SpeedLimitRule new]];
  //   [self.ruls addObject:[TendToPlaceRule new]];
     
-    for (int i = 1; i <= 20; ++ i){
+    for (int i = 1; i <= 30; ++ i){
         Boid *boid = [Boid createBoid];
         
         [self.boids addObject:boid];
